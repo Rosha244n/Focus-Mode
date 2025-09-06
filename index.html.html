@@ -1,0 +1,1244 @@
+
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Exported Code</title>
+                        <style>body {
+  font-family: sans-serif;
+  padding: 20px;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  color: #0096FF;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #0096FF;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}</style>
+                    </head>
+                    <body>
+                        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Timer + Focus Mode</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --danger-color: #cf6679;
+            --success-color: #4caf50;
+            --warning-color: #ffb74d;
+            --progress-bg: #333;
+            --border-color: #444;
+        }
+
+        body.light-theme {
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #6200ee;
+            --secondary-color: #018786;
+            --danger-color: #b00020;
+            --success-color: #388e3c;
+            --warning-color: #f57c00;
+            --progress-bg: #e0e0e0;
+            --border-color: #dddddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .custom-time {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .custom-time input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+
+        .custom-time button {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-time button:hover {
+            background-color: #9a67ea;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .preset-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .preset-btn:hover {
+            background-color: #00b8a9;
+        }
+
+        .timer-display {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .timer {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+
+        .circular-progress {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-color) 0deg, var(--progress-bg) 0deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circular-progress::before {
+            content: '';
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+        }
+
+        .linear-progress {
+            width: 100%;
+            height: 10px;
+            background-color: var(--progress-bg);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .linear-progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .start-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .start-btn:hover {
+            background-color: #388e3c;
+        }
+
+        .pause-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .pause-btn:hover {
+            background-color: #f57c00;
+        }
+
+        .reset-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background-color: #b00020;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .extra-features {
+            margin-top: 20px;
+        }
+
+        .feature-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feature-toggle input {
+            margin-right: 10px;
+        }
+
+        .sections-container {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .section-item {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .section-item input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin-right: 5px;
+        }
+
+        .section-item button {
+            padding: 8px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-section-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-icon {
+            font-size: 1.2rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .motivational-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            display: none;
+            z-index: 1001;
+            max-width: 300px;
+        }
+
+        .motivational-popup h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .motivational-popup button {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .keyboard-shortcuts {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .keyboard-shortcuts h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .shortcut {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .shortcut-key {
+            background-color: var(--card-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .timer {
+                font-size: 3rem;
+            }
+
+            .preset-buttons {
+                flex-direction: column;
+            }
+
+            .preset-btn {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .control-btn {
+                width: 100%;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content .confirm-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .modal-content .cancel-btn {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Exam Timer + Focus Mode</h1>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+
+        <div class="input-section">
+            <div class="custom-time">
+                <input type="number" id="customMinutes" placeholder="Enter minutes" min="1" max="600">
+                <button id="setCustomTime">Set Time</button>
+            </div>
+
+            <div class="preset-buttons">
+                <button class="preset-btn" data-minutes="25">Pomodoro (25 min)</button>
+                <button class="preset-btn" data-minutes="30">Quick Test (30 min)</button>
+                <button class="preset-btn" data-minutes="180">Long Exam (3 hours)</button>
+            </div>
+        </div>
+
+        <div class="timer-display">
+            <div class="progress-container">
+                <div class="circular-progress" id="circularProgress"></div>
+            </div>
+            <div class="timer" id="timer" aria-live="polite">00:00:00</div>
+            <div class="linear-progress">
+                <div class="linear-progress-bar" id="linearProgressBar"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn start-btn" id="startBtn">Start</button>
+            <button class="control-btn pause-btn" id="pauseBtn" disabled>Pause</button>
+            <button class="control-btn reset-btn" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="interruptions">0</div>
+                <div class="stat-label">Interruptions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="completedSessions">0</div>
+                <div class="stat-label">Sessions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="totalFocusTime">0m</div>
+                <div class="stat-label">Focus Time</div>
+            </div>
+        </div>
+
+        <div class="extra-features">
+            <div class="feature-toggle">
+                <input type="checkbox" id="sectionedExam">
+                <label for="sectionedExam">Sectioned Exam</label>
+            </div>
+            <div class="sections-container" id="sectionsContainer">
+                <div id="sectionsList"></div>
+                <button class="add-section-btn" id="addSectionBtn">
+                    <span class="add-icon">+</span>
+                    <span>Add Section</span>
+                </button>
+            </div>
+
+            <div class="feature-toggle">
+                <input type="checkbox" id="breakReminder" checked>
+                <label for="breakReminder">Break Reminders</label>
+            </div>
+
+            <div class="feature-toggle">
+                <input type="checkbox" id="motivationalPopups" checked>
+                <label for="motivationalPopups">Motivational Popups</label>
+            </div>
+        </div>
+
+        <div class="keyboard-shortcuts">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="shortcut">
+                <span>Start/Pause</span>
+                <span class="shortcut-key">Space</span>
+            </div>
+            <div class="shortcut">
+                <span>Reset</span>
+                <span class="shortcut-key">R</span>
+            </div>
+            <div class="shortcut">
+                <span>Toggle Fullscreen</span>
+                <span class="shortcut-key">F</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    <div class="motivational-popup" id="motivationalPopup">
+        <h3 id="motivationalTitle">Stay Focused!</h3>
+        <p id="motivationalMessage">You're doing great!</p>
+        <button id="closeMotivationalPopup">Got it!</button>
+    </div>
+
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3>Confirm Reset</h3>
+            <p>Are you sure you want to reset the timer?</p>
+            <button class="confirm-btn" id="confirmReset">Yes, Reset</button>
+            <button class="cancel-btn" id="cancelReset">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Timer state
+        let timerState = {
+            totalSeconds: 0,
+            remainingSeconds: 0,
+            isRunning: false,
+            isPaused: false,
+            intervalId: null,
+            interruptions: 0,
+            startTime: null,
+            wakeLock: null,
+            sections: [],
+            currentSectionIndex: 0,
+            sectionedExam: false,
+            breakReminder: true,
+            motivationalPopups: true,
+            lastMotivationalTime: 0,
+            lastBreakReminderTime: 0
+        };
+
+        // DOM elements
+        const timerElement = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const customMinutesInput = document.getElementById('customMinutes');
+        const setCustomTimeBtn = document.getElementById('setCustomTime');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const circularProgress = document.getElementById('circularProgress');
+        const linearProgressBar = document.getElementById('linearProgressBar');
+        const interruptionsElement = document.getElementById('interruptions');
+        const completedSessionsElement = document.getElementById('completedSessions');
+        const totalFocusTimeElement = document.getElementById('totalFocusTime');
+        const themeToggle = document.getElementById('themeToggle');
+        const notification = document.getElementById('notification');
+        const motivationalPopup = document.getElementById('motivationalPopup');
+        const motivationalTitle = document.getElementById('motivationalTitle');
+        const motivationalMessage = document.getElementById('motivationalMessage');
+        const closeMotivationalPopupBtn = document.getElementById('closeMotivationalPopup');
+        const sectionedExamCheckbox = document.getElementById('sectionedExam');
+        const sectionsContainer = document.getElementById('sectionsContainer');
+        const sectionsList = document.getElementById('sectionsList');
+        const addSectionBtn = document.getElementById('addSectionBtn');
+        const breakReminderCheckbox = document.getElementById('breakReminder');
+        const motivationalPopupsCheckbox = document.getElementById('motivationalPopups');
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmResetBtn = document.getElementById('confirmReset');
+        const cancelResetBtn = document.getElementById('cancelReset');
+
+        // Initialize app
+        function init() {
+            // Load saved data
+            loadUserData();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Update UI
+            updateStats();
+            updateTimerDisplay();
+            
+            // Check for notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+            
+            // Set up visibility change listener for interruptions
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            
+            // Disable right-click
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            
+            // Set up beforeunload listener
+            window.addEventListener('beforeunload', handleBeforeUnload);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            startBtn.addEventListener('click', startTimer);
+            pauseBtn.addEventListener('click', pauseTimer);
+            resetBtn.addEventListener('click', showResetConfirmation);
+            setCustomTimeBtn.addEventListener('click', setCustomTime);
+            
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const minutes = parseInt(btn.getAttribute('data-minutes'));
+                    setTimer(minutes * 60);
+                });
+            });
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            closeMotivationalPopupBtn.addEventListener('click', closeMotivationalPopup);
+            
+            sectionedExamCheckbox.addEventListener('change', toggleSectionedExam);
+            addSectionBtn.addEventListener('click', addSection);
+            
+            breakReminderCheckbox.addEventListener('change', () => {
+                timerState.breakReminder = breakReminderCheckbox.checked;
+                saveUserData();
+            });
+            
+            motivationalPopupsCheckbox.addEventListener('change', () => {
+                timerState.motivationalPopups = motivationalPopupsCheckbox.checked;
+                saveUserData();
+            });
+            
+            confirmResetBtn.addEventListener('click', resetTimer);
+            cancelResetBtn.addEventListener('click', () => {
+                confirmModal.style.display = 'none';
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        // Keyboard shortcuts handler
+        function handleKeyboardShortcuts(e) {
+            // Ignore if typing in an input field
+            if (e.target.tagName === 'INPUT') return;
+            
+            switch(e.key.toLowerCase()) {
+                case ' ':
+                    e.preventDefault();
+                    if (timerState.isRunning) {
+                        pauseTimer();
+                    } else {
+                        startTimer();
+                    }
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    showResetConfirmation();
+                    break;
+                case 'f':
+                    e.preventDefault();
+                    toggleFullscreen();
+                    break;
+            }
+        }
+
+        // Set custom time
+        function setCustomTime() {
+            const minutes = parseInt(customMinutesInput.value);
+            if (isNaN(minutes) || minutes <= 0) {
+                showNotification('Please enter a valid number of minutes');
+                return;
+            }
+            
+            setTimer(minutes * 60);
+            customMinutesInput.value = '';
+        }
+
+        // Set timer with seconds
+        function setTimer(seconds) {
+            timerState.totalSeconds = seconds;
+            timerState.remainingSeconds = seconds;
+            updateTimerDisplay();
+            updateProgress();
+        }
+
+        // Start timer
+        function startTimer() {
+            if (timerState.remainingSeconds <= 0) {
+                showNotification('Please set a timer first');
+                return;
+            }
+            
+            if (timerState.isPaused) {
+                timerState.isPaused = false;
+            } else {
+                timerState.startTime = new Date();
+            }
+            
+            timerState.isRunning = true;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            
+            // Enter fullscreen
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            }
+            
+            // Request wake lock
+            requestWakeLock();
+            
+            // Start countdown
+            timerState.intervalId = setInterval(updateTimer, 1000);
+            
+            // Show notification
+            showNotification('Timer started. Focus mode activated!');
+        }
+
+        // Pause timer
+        function pauseTimer() {
+            timerState.isRunning = false;
+            timerState.isPaused = true;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            
+            clearInterval(timerState.intervalId);
+            
+            // Release wake lock
+            releaseWakeLock();
+            
+            // Show notification
+            showNotification('Timer paused');
+        }
+
+        // Reset timer
+        function resetTimer() {
+            clearInterval(timerState.intervalId);
+            timerState.isRunning = false;
+            timerState.isPaused = false;
+            timerState.remainingSeconds = timerState.totalSeconds;
+            timerState.currentSectionIndex = 0;
+            
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            
+            updateTimerDisplay();
+            updateProgress();
+            
+            // Release wake lock
+            releaseWakeLock();
+            
+            // Exit fullscreen
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+            
+            // Hide confirmation modal
+            confirmModal.style.display = 'none';
+            
+            // Show notification
+            showNotification('Timer reset');
+        }
+
+        // Show reset confirmation
+        function showResetConfirmation() {
+            if (timerState.isRunning || timerState.isPaused) {
+                confirmModal.style.display = 'flex';
+            } else {
+                resetTimer();
+            }
+        }
+
+        // Update timer
+        function updateTimer() {
+            if (timerState.remainingSeconds <= 0) {
+                // Timer completed
+                clearInterval(timerState.intervalId);
+                timerState.isRunning = false;
+                
+                // Play sound
+                playBeepSound();
+                
+                // Show notification
+                showNotification('Time\'s up!');
+                
+                // Show browser notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Exam Timer', {
+                        body: 'Time\'s up!',
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23bb86fc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'
+                    });
+                }
+                
+                // Update stats
+                const completedSessions = parseInt(localStorage.getItem('completedSessions') || '0') + 1;
+                localStorage.setItem('completedSessions', completedSessions);
+                
+                const totalFocusTime = parseInt(localStorage.getItem('totalFocusTime') || '0') + Math.floor(timerState.totalSeconds / 60);
+                localStorage.setItem('totalFocusTime', totalFocusTime);
+                
+                updateStats();
+                
+                // Reset UI
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+                
+                // Exit fullscreen
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+                
+                // Release wake lock
+                releaseWakeLock();
+                
+                return;
+            }
+            
+            // Decrement remaining seconds
+            timerState.remainingSeconds--;
+            
+            // Update display
+            updateTimerDisplay();
+            updateProgress();
+            
+            // Check for warnings
+            checkForWarnings();
+            
+            // Check for break reminder
+            checkForBreakReminder();
+            
+            // Check for motivational popup
+            checkForMotivationalPopup();
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerState.remainingSeconds / 3600);
+            const minutes = Math.floor((timerState.remainingSeconds % 3600) / 60);
+            const seconds = timerState.remainingSeconds % 60;
+            
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Update progress bars
+        function updateProgress() {
+            if (timerState.totalSeconds === 0) {
+                circularProgress.style.background = `conic-gradient(var(--primary-color) 0deg, var(--progress-bg) 0deg)`;
+                linearProgressBar.style.width = '0%';
+                return;
+            }
+            
+            const progress = ((timerState.totalSeconds - timerState.remainingSeconds) / timerState.totalSeconds) * 100;
+            const degrees = (progress / 100) * 360;
+            
+            circularProgress.style.background = `conic-gradient(var(--primary-color) ${degrees}deg, var(--progress-bg) ${degrees}deg)`;
+            linearProgressBar.style.width = `${progress}%`;
+        }
+
+        // Check for warnings
+        function checkForWarnings() {
+            // 5 minutes warning
+            if (timerState.remainingSeconds === 300) {
+                showNotification('5 minutes remaining!');
+                
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Exam Timer', {
+                        body: '5 minutes remaining!',
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffb74d"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'
+                    });
+                }
+            }
+            
+            // 1 minute warning
+            if (timerState.remainingSeconds === 60) {
+                showNotification('1 minute remaining!');
+                
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Exam Timer', {
+                        body: '1 minute remaining!',
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23cf6679"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'
+                    });
+                }
+            }
+        }
+
+        // Check for break reminder
+        function checkForBreakReminder() {
+            if (!timerState.breakReminder || timerState.totalSeconds < 3600) return;
+            
+            const elapsedSeconds = timerState.totalSeconds - timerState.remainingSeconds;
+            
+            // Show break reminder after 50 minutes
+            if (elapsedSeconds === 3000 && timerState.lastBreakReminderTime !== elapsedSeconds) {
+                timerState.lastBreakReminderTime = elapsedSeconds;
+                showNotification('Consider taking a 10-minute break!');
+                
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Exam Timer', {
+                        body: 'Consider taking a 10-minute break!',
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2303dac6"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>'
+                    });
+                }
+            }
+        }
+
+        // Check for motivational popup
+        function checkForMotivationalPopup() {
+            if (!timerState.motivationalPopups) return;
+            
+            const elapsedSeconds = timerState.totalSeconds - timerState.remainingSeconds;
+            
+            // Show motivational popup every 30 minutes
+            if (elapsedSeconds > 0 && elapsedSeconds % 1800 === 0 && timerState.lastMotivationalTime !== elapsedSeconds) {
+                timerState.lastMotivationalTime = elapsedSeconds;
+                showMotivationalPopup();
+            }
+        }
+
+        // Show motivational popup
+        function showMotivationalPopup() {
+            const messages = [
+                { title: "Stay Focused!", message: "You're doing great!" },
+                { title: "Keep Going!", message: "You've got this!" },
+                { title: "Almost There!", message: "Stay strong!" },
+                { title: "You Can Do It!", message: "Keep up the good work!" },
+                { title: "Focus Mode!", message: "You're on fire!" }
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            motivationalTitle.textContent = randomMessage.title;
+            motivationalMessage.textContent = randomMessage.message;
+            motivationalPopup.style.display = 'block';
+        }
+
+        // Close motivational popup
+        function closeMotivationalPopup() {
+            motivationalPopup.style.display = 'none';
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Play beep sound
+        function playBeepSound() {
+            // Base64 encoded beep sound (simple sine wave)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 880; // A5 note
+            gainNode.gain.value = 0.3;
+            
+            oscillator.start();
+            
+            // Fade out
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1);
+            
+            oscillator.stop(audioContext.currentTime + 1);
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            
+            if (document.body.classList.contains('light-theme')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Handle visibility change (for interruptions)
+        function handleVisibilityChange() {
+            if (document.visibilityState === 'hidden' && timerState.isRunning) {
+                timerState.interruptions++;
+                interruptionsElement.textContent = timerState.interruptions;
+                saveUserData();
+            }
+        }
+
+        // Handle before unload
+        function handleBeforeUnload(e) {
+            if (timerState.isRunning) {
+                const message = 'You have an active timer. Are you sure you want to leave?';
+                e.returnValue = message;
+                return message;
+            }
+        }
+
+        // Request wake lock
+        async function requestWakeLock() {
+            if ('wakeLock' in navigator) {
+                try {
+                    timerState.wakeLock = await navigator.wakeLock.request('screen');
+                    timerState.wakeLock.addEventListener('release', () => {
+                        console.log('Wake Lock was released');
+                    });
+                    console.log('Wake Lock is active');
+                } catch (err) {
+                    console.error(`Error obtaining wake lock: ${err.message}`);
+                }
+            }
+        }
+
+        // Release wake lock
+        function releaseWakeLock() {
+            if (timerState.wakeLock) {
+                timerState.wakeLock.release();
+                timerState.wakeLock = null;
+            }
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Toggle sectioned exam
+        function toggleSectionedExam() {
+            timerState.sectionedExam = sectionedExamCheckbox.checked;
+            sectionsContainer.style.display = timerState.sectionedExam ? 'block' : 'none';
+            
+            if (timerState.sectionedExam && timerState.sections.length === 0) {
+                addSection();
+            }
+            
+            saveUserData();
+        }
+
+        // Add section
+        function addSection() {
+            const sectionId = Date.now();
+            const section = { id: sectionId, name: '', minutes: 30 };
+            
+            timerState.sections.push(section);
+            renderSections();
+            saveUserData();
+        }
+
+        // Remove section
+        function removeSection(id) {
+            timerState.sections = timerState.sections.filter(section => section.id !== id);
+            renderSections();
+            saveUserData();
+        }
+
+        // Update section
+        function updateSection(id, field, value) {
+            const section = timerState.sections.find(section => section.id === id);
+            if (section) {
+                section[field] = field === 'minutes' ? parseInt(value) || 0 : value;
+                saveUserData();
+            }
+        }
+
+        // Render sections
+        function renderSections() {
+            sectionsList.innerHTML = '';
+            
+            timerState.sections.forEach(section => {
+                const sectionItem = document.createElement('div');
+                sectionItem.className = 'section-item';
+                
+                sectionItem.innerHTML = `
+                    <input type="text" placeholder="Section name" value="${section.name}" 
+                           onchange="updateSection(${section.id}, 'name', this.value)">
+                    <input type="number" placeholder="Minutes" min="1" max="600" value="${section.minutes}"
+                           onchange="updateSection(${section.id}, 'minutes', this.value)">
+                    <button onclick="removeSection(${section.id})">×</button>
+                `;
+                
+                sectionsList.appendChild(sectionItem);
+            });
+        }
+
+        // Update stats
+        function updateStats() {
+            interruptionsElement.textContent = timerState.interruptions;
+            completedSessionsElement.textContent = localStorage.getItem('completedSessions') || '0';
+            
+            const totalMinutes = localStorage.getItem('totalFocusTime') || '0';
+            if (totalMinutes < 60) {
+                totalFocusTimeElement.textContent = `${totalMinutes}m`;
+            } else {
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                totalFocusTimeElement.textContent = `${hours}h ${minutes}m`;
+            }
+        }
+
+        // Save user data
+        function saveUserData() {
+            localStorage.setItem('timerState', JSON.stringify({
+                interruptions: timerState.interruptions,
+                sections: timerState.sections,
+                sectionedExam: timerState.sectionedExam,
+                breakReminder: timerState.breakReminder,
+                motivationalPopups: timerState.motivationalPopups
+            }));
+        }
+
+        // Load user data
+        function loadUserData() {
+            const savedState = localStorage.getItem('timerState');
+            if (savedState) {
+                const parsed = JSON.parse(savedState);
+                timerState.interruptions = parsed.interruptions || 0;
+                timerState.sections = parsed.sections || [];
+                timerState.sectionedExam = parsed.sectionedExam || false;
+                timerState.breakReminder = parsed.breakReminder !== undefined ? parsed.breakReminder : true;
+                timerState.motivationalPopups = parsed.motivationalPopups !== undefined ? parsed.motivationalPopups : true;
+                
+                sectionedExamCheckbox.checked = timerState.sectionedExam;
+                sectionsContainer.style.display = timerState.sectionedExam ? 'block' : 'none';
+                breakReminderCheckbox.checked = timerState.breakReminder;
+                motivationalPopupsCheckbox.checked = timerState.motivationalPopups;
+                
+                renderSections();
+            }
+            
+            // Load theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                themeToggle.textContent = '☀️';
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
+                        <script>function greet() {
+  alert("Hello from JavaScript!");
+}</script>
+                    </body>
+                    </html>
+                
